@@ -13,6 +13,7 @@
 		.frontpage-card { margin-top: 0.5%; margin-bottom: 0.5%; }
 		.login-form-card { width: 35%; }
     .navbar-greetings { color: rgba(0,0,0,.9) !important; pointer-events: none; }
+    .card-spacer { margin-top: 0.5%; }
 	</style>
     <title>BugTracker</title>
   </head>
