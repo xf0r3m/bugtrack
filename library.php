@@ -40,12 +40,24 @@ function dbUpdate($connection, $tableName, $setValue, $whereValue) {
 }
 
 function dbAdd($connection, $tableName, $columnScheme, $setValues) {
-  $query = "INSERT INTO " . $tableName . " (" . $columnScheme , ") VALUES (" . $setValues . ");";
+  $query = "INSERT INTO " . $tableName . " (" . $columnScheme . ") VALUES (" . $setValues . ");";
   $result = mysqli_query($connection, $query);
 
   if ( mysqliResult($connection, $result) ) {
     return $result;
   } else {
-    echo "<script>console.log('Zmiana danych w bazie jest niemożliwa');</script>";
+    echo "<script>console.log('Dodanie danych do bazy jest niemożliwa');</script>";
   }
 }
+
+function dbDel($connection, $tableName, $whereValue) {
+  $query = "DELETE FROM " . $tableName . " WHERE " . $whereValue;
+  $result = mysqli_query($connection, $query);
+
+  if ( mysqliResult($connection, $result) ) {
+    return $result;
+  } else {
+    echo "<script>console.log('Usunięcie danych z bazy jest niemożliwa');</script>";
+  }
+}
+  

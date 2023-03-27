@@ -11,4 +11,11 @@ CREATE TABLE user (
 	role varchar(30)
 );
 
+CREATE TABLE product (
+  id int AUTO_INCREMENT PRIMARY KEY,
+  name varchar(30),
+  author varchar(60),
+  description text
+);
+
 INSERT INTO user (username, passwd_hash, role) VALUES ('xf0r3m', "$2y$10$MlbeMeXc3SCoxNftEiyM9OVcuaQcucHbizX4aI0QOZguBCUkZRO0q", 'admin');

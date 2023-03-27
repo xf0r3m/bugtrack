@@ -5,9 +5,11 @@
   if ( isset($_SESSION["username"]) ) {
     if ( isset($_POST) ) {
       #var_dump($_POST);
-      if ( isset($_POST["oldPasswd"]) ) {
-        include('modules/chpasswd.php');
-      } #kolejna czynność
+      if ( isset($_POST["oldPasswd"]) ) { include('modules/chpasswd.php'); }
+      if ( isset($_POST["nuName"]) ) { include('modules/newuser.php'); }
+      if ( isset($_POST["setUPasswd"]) ) { include('modules/setpasswd.php'); }
+      if ( isset($_POST["delUid"]) ) { include('modules/deluser.php'); }
+      if ( isset($_POST["productName"]) ) { include('modules/newproduct.php'); }
     }
     $whereValue="username = '" . $_SESSION["username"] . "';";
     $result = dbQuery($connection, 'user', 'role', $whereValue);
@@ -16,7 +18,16 @@
     #var_dump($userRole);
     include('forms/chpasswd.php');
     if ( $userRole == "admin" ) {
-     include('forms/newuser.php'); 
+      echo "<div class=\"card card-spacer\"><div class=\"card-header\"><h4>Użytkownicy:</h4></div><div class=\"card-body\">";
+      include('forms/newuser.php');
+      include('modules/listusers.php');
+      echo "</div></div>";
+      echo "<div class=\"card card-spacer\"><div class=\"card-header\"><h4>Produkty:</h4></div><div class=\"card-body\">";
+      if ( isset($_POST) && isset($_POST["editPid"]) ) { include('modules/editproduct.php'); }
+      else { include('forms/newproduct.php'); }
+      include('modules/listproducts.php');
+      echo "</div></div>";
+
     } 
   } else {
     include('403.php');

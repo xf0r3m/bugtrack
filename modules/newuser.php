@@ -5,8 +5,8 @@
   $setValues = "'" . $_POST['nuName'] . "','" . $nuPassHash . "','" . $_POST["nuRole"] . "'";
   $result = dbAdd($connection, $tableName, $columnScheme, $setValues);
   if ( $result == true ) {
-    echo "<div class=\"alert alert-success\" role=\"alert\">A simple success alert—check it out!</div>";
+    echo "<div class=\"alert alert-success\" role=\"alert\">Użytkownik " . $_POST["nuName"] . " został pomyśnie utworzony.</div>";
   } else {
-    echo "<div class=\"alert alert-danger\" role=\"alert\">A simple success alert—check it out!</div>";
+    echo "<div class=\"alert alert-danger\" role=\"alert\">Utworzenie użytkownika niepowiodło się.</div>";
   } 
 ?>
