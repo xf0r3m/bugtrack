@@ -9,7 +9,9 @@
       if ( isset($_POST["nuName"]) ) { include('modules/newuser.php'); }
       if ( isset($_POST["setUPasswd"]) ) { include('modules/setpasswd.php'); }
       if ( isset($_POST["delUid"]) ) { include('modules/deluser.php'); }
+      if ( isset($_POST["productId"]) ) { include('modules/editproduct.php'); }
       if ( isset($_POST["productName"]) ) { include('modules/newproduct.php'); }
+      if ( isset($_POST["delPid"]) ) { include('modules/delproduct.php'); }
     }
     $whereValue="username = '" . $_SESSION["username"] . "';";
     $result = dbQuery($connection, 'user', 'role', $whereValue);

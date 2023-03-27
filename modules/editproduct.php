@@ -1,17 +1,29 @@
 <?php
-
-  $id = intval($_POST["editPid"]);
-  $tableName = 'product';
-  $columnScheme = "*";
-  $whereValue = "id = " . $id . ";";
-  $result = dbQuery($connection, $tableName, $columnScheme, $whereValue);
-  if ( $result ) {
-    $row = mysqli_fetch_row($result);
-  } else {
-    echo "<div class=\"alert alert-danger\" role=\"alert\">Nie można odnaleźć wybranego produktu</div>";
+  if ( isset($_POST) && isset($_POST["productId"]) ) {
+    $id = intval($_POST["productId"]);
+    $tableName = 'product';
+    $setValue = "name = '" . $_POST["productName"] . "', author='" . $_POST["productAuthor"] . "', description='" . $_POST["productDesc"] . "'";
+    $whereValue = "id = " . $id;
+    $result = dbUpdate($connection, $tableName, $setValue, $whereValue);
+    if ( $result == true ) {
+      echo "<div class=\"alert alert-success\" role=\"alert\">Zapisano zmiany w produkcie.</div>";
+    } else {
+      echo "<div class=\"alert alert-danger\" role=\"alert\">Nie udało się zapisać zmian w produkcie.</div>";
+    }
+    } else {
+    $id = intval($_POST["editPid"]);
+    $tableName = 'product';
+    $columnScheme = "*";
+    $whereValue = "id = " . $id . ";";
+    $result = dbQuery($connection, $tableName, $columnScheme, $whereValue);
+    if ( $result == true ) {
+      $row = mysqli_fetch_row($result);
+    } else {
+      echo "<div class=\"alert alert-danger\" role=\"alert\">Nie można odnaleźć wybranego produktu</div>";
+    }
   }
 ?>
-
+<?php if ( ! isset($_POST["productId"]) ): ?>
 <div class="card card-spacer">
   <div class="card-body">
     <h5 class="card-title">Nowy produkt:</h5>
@@ -33,3 +45,5 @@
     </form>
   </div>
 </div>
+<?php endif ?>
+<?php unset($_POST); ?>  
