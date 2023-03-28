@@ -18,4 +18,13 @@ CREATE TABLE product (
   description text
 );
 
+CREATE TABLE component (
+  id int AUTO_INCREMENT PRIMARY KEY,
+  productId int,
+  name varchar(30),
+  author varchar(60),
+  description text,
+  FOREIGN KEY (productId) REFERENCES product(id)
+);
+
 INSERT INTO user (username, passwd_hash, role) VALUES ('xf0r3m', "$2y$10$MlbeMeXc3SCoxNftEiyM9OVcuaQcucHbizX4aI0QOZguBCUkZRO0q", 'admin');
