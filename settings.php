@@ -9,9 +9,13 @@
       if ( isset($_POST["nuName"]) ) { include('modules/newuser.php'); }
       if ( isset($_POST["setUPasswd"]) ) { include('modules/setpasswd.php'); }
       if ( isset($_POST["delUid"]) ) { include('modules/deluser.php'); }
+      if ( isset($_POST["componentName"]) ) { include('modules/newcomponent.php'); }
       if ( isset($_POST["productId"]) ) { include('modules/editproduct.php'); }
       if ( isset($_POST["productName"]) ) { include('modules/newproduct.php'); }
       if ( isset($_POST["delPid"]) ) { include('modules/delproduct.php'); }
+      if ( isset($_POST["editCompId"]) ) { include('modules/editcomponent.php'); }
+      if ( isset($_POST["delCid"]) ) { include('modules/delcomponent.php'); }
+
     }
     $whereValue="username = '" . $_SESSION["username"] . "';";
     $result = dbQuery($connection, 'user', 'role', $whereValue);
@@ -29,7 +33,11 @@
       else { include('forms/newproduct.php'); }
       include('modules/listproducts.php');
       echo "</div></div>";
-
+      echo "<div class=\"card card-spacer\"><div class=\"card-header\"><h4>Komponenty:</h4></div><div class=\"card-body\">";
+      if ( isset($_POST) && isset($_POST["editCid"]) ) { include('modules/editcomponent.php'); }
+      else { include('forms/newcomponent.php'); }
+      include('modules/listcomponents.php');
+      echo "</div></div>";
     } 
   } else {
     include('403.php');
