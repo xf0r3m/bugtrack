@@ -21,7 +21,7 @@
     }
     echo "</tbody></table>";
   } else {
-    echo "<div class=\"alert alert-primary\" role=\"alert\">Nie znaleziono żadnych produktów!</div>";
+    echo "<div class=\"alert alert-primary\" role=\"alert\">Nie znaleziono żadnych produktów.</div>";
   }
   echo "</div></div>";
 ?>
