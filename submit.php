@@ -2,12 +2,49 @@
   if ( isset($_POST) && isset($_POST["submitProductId"]) ) {
     $tableName = 'bug';
     $columnScheme = "productId,componentId,typeof,subject,description,state";
-    $setValues = intval($_POST["submitProductId"]) . "," . intval($_POST["submitCompId"]) . ",'" . mysqli_real_escape_string($connection, $_POST["submitTypeOf"]) . "','" . mysqli_real_escape_string($connection, $_POST["submitSubject"]) . "','" . mysqli_real_escape_string($connection, $_POST["submitDesc"]) . "',0";
+    $setValues = intval($_POST["submitProductId"]) . "," . intval($_POST["submitCompId"]) . ",'" . mysqli_real_escape_string($connection, htmlspecialchars($_POST["submitTypeOf"])) . "','" . mysqli_real_escape_string($connection, htmlspecialchars($_POST["submitSubject"])) . "','" . mysqli_real_escape_string($connection, htmlspecialchars($_POST["submitDesc"])) . "',0";
     $result = dbAdd($connection, $tableName, $columnScheme, $setValues);
     if ( $result == true ) {
       echo "<div class=\"alert alert-success\" role=\"alert\">Zgłoszenie zostało przyjęte. Niebawem pojawi się na stronie zgłoszonych problemów</div>";
     } else {
       echo "<div class=\"alert alert-danger\" role=\"alert\">Zgłosznie nie zostało przyjęte.</div>";
+    }
+    $tableName = 'bug';
+    $columnScheme = "id";
+    $whereValue = "1=1 ORDER BY id DESC";
+    $result = dbQuery($connection, $tableName, $columnScheme, $whereValue);
+    if ( mysqli_num_rows($result) > 0 ) {
+      $row = mysqli_fetch_row($result);
+      $bugId = $row[0];
+    }
+    
+    $tableName = 'product';
+    $columnScheme = 'name,description';
+    $whereValue = "id = " . intval($_POST["submitProductId"]);
+    $productResult = dbQuery($connection, $tableName, $columnScheme, $whereValue);
+    if ( mysqli_num_rows($productResult) > 0 ) {
+      $productRow = mysqli_fetch_row($productResult);
+    }
+    
+    $tableName = 'component';
+    $columnScheme = 'name,description';
+    $whereValue = "id = " . intval($_POST["submitCompId"]);
+    $componentResult = dbQuery($connection, $tableName, $columnScheme, $whereValue);
+    if ( mysqli_num_rows($componentResult) > 0 ) {
+      $componentRow = mysqli_fetch_row($componentResult);
+    }
+
+    $tableName = "comment";
+    $columnScheme = 'bugId,user,date,content';
+    if ( session_status() != 2 ) { session_start(); }
+    if ( isset($_SESSION["username"]) ) { $userName = $_SESSION["username"]; }
+    else { $userName = $_SERVER["REMOTE_ADDR"]; }
+    $setValue = intval($bugId) . ",'" . $userName . "','" . date("Y-m-d H:i:s") . "','Utworzono zgłoszenie.<br /><br /><strong>Produkt:</strong> " . $productRow[0] . " (" . $productRow[1] . ")<br /><strong>Komponent:</strong> " . $componentRow[0] . " (" . $componentRow[1] . ")<br /><strong>Rodzaj zgłoszenia:</strong> " . htmlspecialchars($_POST["submitTypeOf"]) . "<br /><strong>Temat: </strong>" . htmlspecialchars($_POST["submitSubject"]) . "<br /><strong>Opis zgłoszenia:</strong><br />" . htmlspecialchars($_POST["submitDesc"]) . "'";
+    $result = dbAdd($connection, $tableName, $columnScheme, $setValue);
+    if ( $result == true ) { 
+      echo "<div class=\"alert alert-success\" role=\"alert\">Zgłoszenie zostało również zapisane jako pierwszy komentarz</div>";
+    } else {
+      echo "<div class=\"alert alert-danger\" role=\"alert\">Zgłoszenie nie zostało zapisane.</div>";
     }
   }
 ?>

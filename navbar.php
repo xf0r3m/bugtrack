@@ -10,7 +10,7 @@
             <a class="nav-link frontpage-link" href="?p=siteListProducts">Zgłoś błąd</a>
           </li>
 		      <li class="nav-item">
-            <a class="nav-link frontpage-link" href="#">Zgłoszone błędy</a>
+            <a class="nav-link frontpage-link" href="?p=bugs">Zgłoszone błędy</a>
           </li>
             <?php
               session_start();

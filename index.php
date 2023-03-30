@@ -21,6 +21,7 @@
     <?php include('library.php'); ?>
     <?php include('db_conf.php'); ?>
     <?php include('navbar.php'); ?>
+
 	  <div class="card frontpage-card">
       <div class="card-body">
         <?php
@@ -35,16 +36,22 @@
               include('siteListProducts.php');
             } else if ($_GET["p"] == "submit") {
               include('submit.php');
+            } else if ($_GET["p"] == "bugs") {
+              include('bugs.php');
+            } else if ($_GET["p"] == "comments") {
+              include('comments.php');
             } else {
               include('404.php');
             }
           } else {
+            include('frontpage.php');
             if ( session_status() != 2 ) { session_start(); }
             if ( isset($_SESSION["username"]) ) {
+              if ( isset($_POST) && isset($_POST["chBugState"]) ) {
+                include('modules/chbugstate.php');
+              } 
               include('listofbugs.php');
-            } else {
-              include('frontpage.php');
-            }
+            } 
           }
         ?>
       </div>

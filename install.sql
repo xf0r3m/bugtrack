@@ -44,5 +44,14 @@ CREATE TABLE bug (
   FOREIGN KEY (componentId) REFERENCES component(id)
 );
 
+CREATE TABLE comment (
+  id int AUTO_INCREMENT PRIMARY KEY,
+  bugId int,
+  user varchar(60),
+  date varchar(60),
+  content text,
+  FOREIGN KEY (bugId) REFERENCES bug(id)
+);
+
 INSERT INTO user (username, passwd_hash, role) VALUES ('xf0r3m', "$2y$10$MlbeMeXc3SCoxNftEiyM9OVcuaQcucHbizX4aI0QOZguBCUkZRO0q", 'admin');
 INSERT INTO site (slogan) VALUES ('Hello, World!');
