@@ -17,6 +17,8 @@
       echo "</div><div class=\"card-body\">" . $row[2] . "</div></div>";
     }
   }
+  if ( session_status() != 2 ) { session_start(); }
+  if ( isset($_SESSION["username"]) ) {
   echo "<div class=\"card card-spacer\">
 <form action=\"?p=comments&bid=" . intval($_GET["bid"]) . "\" method=\"post\">
   <div class=\"mb-3\">
@@ -27,5 +29,6 @@
   <button type=\"submit\" class=\"btn btn-primary\">Dodaj komentarz</button>
 </form>
 </div>";
+  }
 ?>
 
