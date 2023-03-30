@@ -53,7 +53,7 @@
     <h4>Zgłoś błąd:</h4>
   </div>
   <div class="card-body">
-    <form action="?p=submit" method="post">
+    <form action="?p=submit&pid=<?php echo intval($_GET["pid"]); ?>" method="post">
       <div class="mb-3">
         <label for="productReadonlySelect" class="form-label">Produkt:</label>
         <select class="form-select" id="productReadonlySelect" name="submitProductId" readonly>
