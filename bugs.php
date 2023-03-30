@@ -16,18 +16,18 @@
     echo "<tbody>";
     $n = 1;
     while ( $row = mysqli_fetch_row($result) ) {
-      echo "<tr><td>" . $n . "</td><td><a href=\"coments.php?bid=" . $row[0] . "\">#" . $row[0] . "</a></td><th scope=\"row\">";
+      echo "<tr><td>" . $n . "</td><td><a href=\"?p=comments&bid=" . $row[0] . "\">#" . $row[0] . "</a></td><th scope=\"row\">";
       $tableName = 'product';
       $columnScheme = 'name';
       $whereValue = 'id = ' . intval($row[1]);
-      $result = dbQuery($connection, $tableName, $columnScheme, $whereValue);
-      echo getFieldValue($result);
+      $result2 = dbQuery($connection, $tableName, $columnScheme, $whereValue);
+      echo getFieldValue($result2);
       echo "</th><th>";
       $tableName = 'component';
       $columnScheme = 'name';
       $whereValue = 'id = ' . intval($row[2]);
-      $result = dbQuery($connection, $tableName, $columnScheme, $whereValue);
-      echo getFieldValue($result);
+      $result3 = dbQuery($connection, $tableName, $columnScheme, $whereValue);
+      echo getFieldValue($result3);
       echo "</th><td>" . $row[3] . "</td><td>" . $row[4] . "</td><td>" . $row[5] . "</td>";
       echo "<td>";
       $stateTbl = array("Przyjęty", "Potwierdzony", "W trakcie", "Zakończony");
