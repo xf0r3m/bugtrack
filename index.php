@@ -51,7 +51,8 @@
                 include('modules/chbugstate.php');
               } 
               include('listofbugs.php');
-            } 
+            }
+            include('statistics.php'); 
           }
         ?>
       </div>
