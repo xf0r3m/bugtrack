@@ -31,11 +31,20 @@
               include('settings.php');
             } else if ($_GET["p"] == "logout") {
               include('logout.php');
+            } else if ($_GET["p"] == "siteListProducts") {
+              include('siteListProducts.php');
+            } else if ($_GET["p"] == "submit") {
+              include('submit.php');
             } else {
               include('404.php');
             }
           } else {
-            include('frontpage.php');
+            if ( session_status() != 2 ) { session_start(); }
+            if ( isset($_SESSION["username"]) ) {
+              include('listofbugs.php');
+            } else {
+              include('frontpage.php');
+            }
           }
         ?>
       </div>
