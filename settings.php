@@ -15,6 +15,7 @@
       if ( isset($_POST["delPid"]) ) { include('modules/delproduct.php'); }
       if ( isset($_POST["editCompId"]) ) { include('modules/editcomponent.php'); }
       if ( isset($_POST["delCid"]) ) { include('modules/delcomponent.php'); }
+      if ( isset($_POST["siteSlogan"]) ) { include('modules/saveslogan.php'); }
 
     }
     $whereValue="username = '" . $_SESSION["username"] . "';";
@@ -38,6 +39,10 @@
       else { include('forms/newcomponent.php'); }
       include('modules/listcomponents.php');
       echo "</div></div>";
+      echo "<div class=\"card card-spacer\"><div class=\"card-header\"><h4>Strona główna:</h4></div><div class=\"card-body\">";
+      include('forms/slogan.php');
+      echo "</div></div>";
+
     } 
   } else {
     include('403.php');
