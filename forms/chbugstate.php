@@ -4,7 +4,7 @@
     <div class="col">
       <select class="form-select" name="chBugState">
         <?php
-        $stateTbl = array('Przyjęty', 'Potwierdzony', 'W trakcie', 'Zakończony');
+        $stateTbl = array('Przyjęty', 'Potwierdzony', 'W trakcie', 'Zakończony', 'Odrzucony', 'Do usunięcia');
         $tableName = 'bug';
         $columnScheme = "state";
         $whereValue = "id = " . intval($row[0]);
