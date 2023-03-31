@@ -1,3 +1,13 @@
+<?php include('library.php'); ?>
+<?php include('db_conf.php'); ?>
+<?php
+  $tableName = 'site';
+  $columnScheme = 'slogan';
+  $whereValue = "id = 1";
+  $result = dbQuery($connection, $tableName, $columnScheme, $whereValue);
+  $row = mysqli_fetch_row($result);
+?>
+
 <!doctype html>
 <html lang="pl">
   <head>
@@ -15,11 +25,9 @@
     .navbar-greetings { color: rgba(0,0,0,.9) !important; pointer-events: none; }
     .card-spacer { margin-top: 0.5%; }
 	</style>
-    <title>BugTrack</title>
+        <title>BugTrack - <?php echo $row[0]; ?></title>
   </head>
   <body>
-    <?php include('library.php'); ?>
-    <?php include('db_conf.php'); ?>
     <?php include('navbar.php'); ?>
 
 	  <div class="card frontpage-card">
