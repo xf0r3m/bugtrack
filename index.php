@@ -15,7 +15,7 @@
     .navbar-greetings { color: rgba(0,0,0,.9) !important; pointer-events: none; }
     .card-spacer { margin-top: 0.5%; }
 	</style>
-    <title>BugTracker</title>
+    <title>BugTrack</title>
   </head>
   <body>
     <?php include('library.php'); ?>
@@ -59,7 +59,7 @@
     </div>
 	  <nav class="navbar navbar-expand-lg navbar-light bg-light">
 	    <div class="container-fluid">
-        <a class="navbar-brand active" aria-current="page" href="http://<?php echo $_SERVER["SERVER_NAME"];?>">BugTracker - morketsmerke.org @ 2023</a>
+        <a class="navbar-brand active" aria-current="page" href="http://<?php echo $_SERVER["SERVER_NAME"];?>">BugTrack - morketsmerke.org @ 2023</a>
       </div>
     </nav>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
