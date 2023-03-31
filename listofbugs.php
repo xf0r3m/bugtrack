@@ -6,7 +6,7 @@
 <?php
   $tableName = 'bug';
   $columnScheme = "*";
-  $whereValue = "1=1";
+  $whereValue = "state < 3";
   $result = dbQuery($connection, $tableName, $columnScheme, $whereValue);
   if ( mysqli_num_rows($result) > 0 ) {
     echo "<table class=\"table\">";
