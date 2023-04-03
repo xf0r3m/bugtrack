@@ -39,7 +39,7 @@
     if ( session_status() != 2 ) { session_start(); }
     if ( isset($_SESSION["username"]) ) { $userName = $_SESSION["username"]; }
     else { $userName = $_SERVER["REMOTE_ADDR"]; }
-    $setValue = intval($bugId) . ",'" . $userName . "','" . date("Y-m-d H:i:s") . "','Utworzono zgłoszenie.<br /><br /><strong>Produkt:</strong> " . $productRow[0] . " (" . $productRow[1] . ")<br /><strong>Komponent:</strong> " . $componentRow[0] . " (" . $componentRow[1] . ")<br /><strong>Rodzaj zgłoszenia:</strong> " . htmlspecialchars($_POST["submitTypeOf"]) . "<br /><strong>Temat: </strong>" . htmlspecialchars($_POST["submitSubject"]) . "<br /><strong>Opis zgłoszenia:</strong><br />" . htmlspecialchars($_POST["submitDesc"]) . "'";
+    $setValue = intval($bugId) . ",'" . $userName . "','" . date("Y-m-d H:i:s") . "','Utworzono zgłoszenie.<br /><br /><strong>Produkt:</strong> " . $productRow[0] . " (" . $productRow[1] . ")<br /><strong>Komponent:</strong> " . $componentRow[0] . " (" . $componentRow[1] . ")<br /><strong>Rodzaj zgłoszenia:</strong> " . mysqli_real_escape_string($connection, htmlspecialchars($_POST["submitTypeOf"])) . "<br /><strong>Temat: </strong>" . mysqli_real_escape_string($connection, htmlspecialchars($_POST["submitSubject"])) . "<br /><strong>Opis zgłoszenia:</strong><br />" . mysqli_real_escape_string($connection, htmlspecialchars($_POST["submitDesc"])) . "'";
     $result = dbAdd($connection, $tableName, $columnScheme, $setValue);
     if ( $result == true ) { 
       echo "<div class=\"alert alert-success\" role=\"alert\">Zgłoszenie zostało również zapisane jako pierwszy komentarz</div>";
