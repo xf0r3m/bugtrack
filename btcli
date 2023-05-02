@@ -1,0 +1,344 @@
+#!/usr/bin/php -d log_errors=Off
+<?php
+  $ROOT = "/var/www/html";
+  include($ROOT . "/library.php");
+  include($ROOT . "/db_conf.php");
+  $DEFAULT_USER = $_SERVER['USER'];
+  
+  function list_of_bugs($connection, $type_of="all") {
+    $tableName = "bug";
+    $columnScheme = "*";
+    if ( isset($type_of) ) {
+      if ( $type_of == "all" ) {
+        $whereValue = "1=1";
+      } else if ( $type_of == "user" ) {
+        $whereValue = "state < 3";
+      }
+    } 
+    $result = dbQuery($connection, $tableName, $columnScheme, $whereValue);
+    if ( mysqli_num_rows($result) > 0 ) {
+      $n=1;
+      while ( $row = mysqli_fetch_row($result) ) {
+        echo $n . "\t#" . $row[0] . "\t";
+
+        $tableName = "product";
+        $columnScheme = "name";
+        $whereValue = "id = " . $row[1];
+        $result2 = dbQuery($connection, $tableName, $columnScheme, $whereValue);
+        $prodName = getFieldValue($result2);
+        echo $prodName . "\t";
+
+        $tableName  = "component";
+        $columnScheme = "name";
+        $whereValue = "id = " . $row[2];
+        $result3 = dbQuery($connection, $tableName, $columnScheme, $whereValue);
+        $compName = getFieldValue($result3);
+        echo $compName . "\t";
+
+        echo $row[3] . "\t" . $row[4] . "\t" . $row[5] . "\t";
+        $stateTbl = array("Przyjęty", "Potwierdzony", "W trakcie", "Zakończony", "Odrzucony");
+        $index = $row[6];
+        $state=$stateTbl[$index];
+
+        echo $state . "\n\n";
+        $n++;
+      }
+    }
+  }
+
+  function list_of_products($connection) {
+    $tableName = "product";
+    $columnScheme = "name,description";
+    $whereValue = "1=1";
+    $result = dbQuery($connection, $tableName, $columnScheme, $whereValue);
+    if ( mysqli_num_rows($result) > 0 ) {
+      $n=1;
+      while ( $row = mysqli_fetch_row($result) ) {
+        echo $n . "\t" . $row[0] . " (" . $row[1] . ")\n\n";
+        $n++;
+      }
+    }
+  }
+
+  function list_of_components($connection, $prodName) {
+    $tableName = "product";
+    $columnScheme = "id";
+    $whereValue = "name = '" . mysqli_real_escape_string($connection, htmlspecialchars($prodName)) . "'";
+    $result = dbQuery($connection, $tableName, $columnScheme, $whereValue);
+    $prodId = getFieldValue($result);
+    $tableName = "component";
+    $columnScheme = "name,description";
+    $whereValue = "productId = " . intval($prodId);
+    $result = dbQuery($connection, $tableName, $columnScheme, $whereValue);
+    if ( mysqli_num_rows($result) > 0 ) {
+      $n=1;
+      while ( $row = mysqli_fetch_row($result) ) {
+        echo $n . "\t" . $row[0] . " (" . $row[1] . ")\n\n";
+        $n++;
+      }
+    } 
+  }
+  
+  function submit_bug($connection, $product, $component, $typeof, $subject, $desc) {
+    $tableName = "product";
+    $columnScheme = "id,description";
+    $whereValue = "name = '" . mysqli_real_escape_string($connection, $product) . "'";
+    $resultp = dbQuery($connection, $tableName, $columnScheme, $whereValue);
+    $productrow = mysqli_fetch_row($resultp);
+    $productId = $productrow[0];
+    $productDesc = $productrow[1];
+  
+    $tableName = "component";
+    $columnScheme = "id,description";
+    $whereValue = "name = '" . mysqli_real_escape_string($connection, $component) . "'";
+    $resultc = dbQuery($connection, $tableName, $columnScheme, $whereValue);
+    $componentrow = mysqli_fetch_row($resultc);
+    $componentId = $componentrow[0];
+    $componentDesc = $componentrow[1];
+
+    $tableName = "bug";
+    $columnScheme = "productId,componentId,typeof,subject,description,state";
+    $setValues = $productId . "," . $componentId . ",'" . mysqli_real_escape_string($connection, htmlspecialchars($typeof)) . "','" . mysqli_real_escape_string($connection, htmlspecialchars($subject)) . "','" . mysqli_real_escape_string($connection, htmlspecialchars($desc)) . "',0";
+    $result = dbAdd($connection, $tableName, $columnScheme, $setValues);
+    if ( $result == true ) { 
+      echo "Zgłoszenie zostało przyjęte. Niebawem pojawi się na stronie zgłoszonych problemów\n\n";
+    } else {
+      var_dump($result);
+    }
+
+    $tableName = "bug";
+    $columnScheme = "id";
+    $whereValue = "1=1 ORDER BY id DESC";
+    $resulti = dbQuery($connection, $tableName, $columnScheme, $whereValue);
+    $bugId = getFieldValue($resulti);
+  
+    $tableName = "comment";
+    $columnScheme = "bugId,user,date,content";
+    $setValues = $bugId . ",'" . $_SERVER["USER"] . "','" . date("Y-m-d H:i:s") . "','Utworzono zgłoszenie.<br /><br /><strong>Produkt:</strong> " . $product . " (" . $productDesc . ")<br /><strong>Komponent:</strong> " . $component . " (" . $componentDesc . ")<br /><strong>Rodzaj zgłoszenia:</strong> " . mysqli_real_escape_string($connection, htmlspecialchars($typeof)) . "<br /><strong>Temat:</strong> " . mysqli_real_escape_string($connection, htmlspecialchars($subject)) . "<br /><strong>Opis zgłoszenia:</strong> " . mysqli_real_escape_string($connection, htmlspecialchars($desc)) . "'";
+    $resultk = dbAdd($connection, $tableName, $columnScheme, $setValues);
+    if ( $resultk == true ) {
+      echo "Zgłoszenie zostało również zapisane jako pierwszy komentarz\n\n";
+    } else {
+      var_dump($resultk);
+    }
+  }
+
+  function add_component($connection, $product, $name, $desc, $author) {
+    $tableName = "product";
+    $columnScheme = "id";
+    $whereValue = "name = '" . mysqli_real_escape_string($connection, htmlspecialchars($product)) . "'";
+    $result = dbQuery($connection, $tableName, $columnScheme, $whereValue);
+    $productId = getFieldValue($result);
+    
+    $tableName = "component";
+    $columnScheme = "productId,name,author,description";
+    $setValues = $productId . ",'" . mysqli_real_escape_string($connection, htmlspecialchars($name)) . "','" . mysqli_real_escape_string($connection, htmlspecialchars($author)) . "','" . mysqli_real_escape_string($connection, htmlspecialchars($desc)) . "'";
+    $resultc = dbAdd($connection, $tableName, $columnScheme, $setValues);
+    if ( $resultc == true ) {
+      echo "Komponent produktu " . $product . " został dodany.\n\n";
+    } else {
+      var_dump($resultc);
+    } 
+  }
+
+  function add_product($connection, $name, $desc, $author) {
+    $tableName = "product";
+    $columnScheme = "name,author,description";
+    $setValues = "'" . mysqli_real_escape_string($connection, htmlspecialchars($name)) . "','" . mysqli_real_escape_string($connection, htmlspecialchars($author)) . "','" . mysqli_real_escape_string($connection, htmlspecialchars($desc)) . "'";
+    $resultp = dbAdd($connection, $tableName, $columnScheme, $setValues);
+    if ( $resultp == true ) {
+      echo "Dodano produkt " . $name . "\n\n";
+    } else {
+      var_dump($resultp);
+    }
+  }
+
+  function show_states($state="all") {
+    if ( isset($state) ) {
+      $stateTbl = array('Przyjęty', 'Potwierdzony', 'W trakcie', 'Zakończony', 'Odrzucony', 'Do usunięcia');
+      if ( $state == "all" ) {
+        for ( $i=0; $i < count($stateTbl); $i++ ) {
+          echo $i . "\t" . $stateTbl[$i] . "\n\n";
+        }
+      } else {
+        return $stateTbl[$state];
+      }
+    }
+  }
+
+
+  function change_state($connection, $bugId, $newState) {
+    if ( ( $newState < 0 ) || ( $newState > 5 ) ) {
+      return false;
+    } else if ( $newState == 5 ) {
+      $tableName = 'comment';
+      $whereValue = 'bugId = ' . intval($bugId);
+      $resultk = dbDel($connection, $tableName, $whereValue);
+      if ( $resultk == "true" ) {
+        echo "Wszystkie komentarz powiązane ze zgłoszeniem zostały usunięte\n\n";
+      } else {
+        var_dump($resultk);
+      }
+      $tableName = 'bug';
+      $whereValue = 'id = ' . intval($bugId);
+      $result = dbDel($connection, $tableName, $whereValue);
+      if ( $result == true ) { 
+        echo "Zgłoszenie zostało usunięte\n\n";
+      } else {
+        var_dump($result);
+      }
+    } else {
+      $tableName = 'bug';
+      $columnScheme = 'state';
+      $setValue = 'state = ' . intval($newState);
+      $whereValue = 'id = ' . intval($bugId);
+      $results = dbQuery($connection, $tableName, $columnScheme, $whereValue);
+      $oldState = getFieldValue($results);
+      $oldStateTxt = show_states($oldState);
+      $newStateTxt = show_states($newState);
+      $result = dbUpdate($connection, $tableName, $setValue, $whereValue);
+      if ( $result == true ) { 
+        echo "Status zgłoszenia został zmieniony\n\n";
+        $tableName = 'comment';
+        $columnScheme = 'bugId,user,date,content';
+        $setValues = intval($bugId) . ",'" . $_SERVER['USER'] . "','" . date("Y-m-d H:i:s") . "','Status zgłoszenia został zmieniony z <strong>" . $oldStateTxt . "</strong> na <strong>" . $newStateTxt . "</strong>'";
+        $resultk=dbAdd($connection, $tableName, $columnScheme, $setValues);
+        if ( $resultk == true ) {
+	        echo "Zmiana status został uwzględniona w komentarzach\n\n";
+        } else {
+          var_dump($resultk);
+        }
+      } else { 
+        var_dump($result);
+      }
+    }
+  }
+
+  function list_of_comments($connection, $bugId) {
+    $tableName = 'comment';
+    $columnScheme = 'user,date,content';
+    $whereValue = "bugId = " . intval($bugId);
+    $result = dbQuery($connection,$tableName,$columnScheme,$whereValue);
+    if ( mysqli_num_rows($result) > 0 ) {
+      while( $row = mysqli_fetch_row($result) ) {
+        echo $row[0] . ", " . $row[1] . " pisze...\n";
+        echo $row[2] . "\n\n";
+      }
+    }
+  }
+
+  function add_comment($connection, $bugId, $content) {
+    $tableName = 'comment';
+    $columnScheme = 'bugId,user,date,content';
+    $setValues = intval($bugId) . ",'" . $_SERVER['USER'] . "','" . date("Y-m-d H:i:s") . "','" . mysqli_real_escape_string($connection,htmlspecialchars($content)) . "'";
+    $result = dbAdd($connection, $tableName, $columnScheme, $setValues);
+    if ( $result == true ) { 
+      echo "Komentarz został dodany.\n\n";
+    } else { 
+      var_dump($result);
+    }
+  }
+
+  function del_component($connection, $prodName, $compName) {
+    $tableName = 'product';
+    $columnScheme = 'id';
+    $whereValue = "name = '" . mysqli_real_escape_string($connection, htmlspecialchars($prodName)) . "'";
+    $result = dbQuery($connection, $tableName, $columnScheme, $whereValue);
+    $prodId = getFieldValue($result);
+    $tableName = 'component';
+    $whereValue = "name = '" . mysqli_real_escape_string($connection,htmlspecialchars($compName)) . "' AND productId = " . intval($prodId);
+    $result = dbDel($connection, $tableName, $whereValue);
+    if ( $result == true ) {
+      echo "Komponent został usunięty\n\n";
+    } else {
+      var_dump($result);
+    }
+  }
+
+  function del_product($connection, $prodName) {
+    $tableName = "product";
+    $columnScheme = "id";
+    $whereValue = "name = '" . mysqli_real_escape_string($connection, htmlspecialchars($prodName)) . "'";
+    $resulti = dbQuery($connection, $tableName, $columnScheme, $whereValue);
+    $prodId = getFieldValue($resulti);
+
+    $tableName = "component";
+    $whereValue = "productId = " . intval($prodId);
+    $result = dbDel($connection, $tableName, $whereValue);
+    if ( $result == true ) { 
+      echo "Wszystkie komponenty powiązane z produktem zostały usunięte\n\n";
+      $tableName = 'product';
+      $whereValue = 'id = ' . intval($prodId);
+      $result = dbDel($connection, $tableName, $whereValue);
+      if ( $result == true ) {
+        echo "Produkt został usunięty\n\n";
+      } else {
+        var_dump($result);
+      }
+    } else {
+      var_dump($result);
+    }
+  }
+
+  function change_password($connection, $username, $newPasswd) {
+    $tableName = "user";
+    $setValues = "passwd_hash = '" . password_hash($newPasswd, PASSWORD_DEFAULT) . "'";
+    $whereValue = "username = '" . mysqli_real_escape_string($connection, htmlspecialchars($username)) . "'";
+    $result = dbUpdate($connection, $tableName, $setValues, $whereValue);
+    if ( $result == true ) {
+      echo "Hasło zostało zmienione\n\n";
+    } else {
+      var_dump($result);
+    }
+  }
+  
+  if ( isset($argv[1]) ) {
+    if ( $argv[1] == 'lb-all' ) { list_of_bugs($connection); }
+    if ( $argv[1] == 'lb-user' ) { list_of_bugs($connection, 'user'); }
+    if ( $argv[1] == 'lp' ) { list_of_products($connection); }
+    if ( $argv[1] == 'lc' ) { list_of_components($connection, $argv[2]); }
+    if ( $argv[1] == 'sb' ) { submit_bug($connection, $argv[2], $argv[3], $argv[4], $argv[5], $argv[6]); }
+    if ( $argv[1] == 'ap' ) { 
+      if ( ! isset($argv[4]) ) { add_product($connection, $argv[2], $argv[3], $_SERVER['USER']);
+      } else { add_product($connection, $argv[2], $argv[3], $argv[4]); }
+    }
+    if ( $argv[1] == 'ac' ) {
+      if ( ! isset($argv[5]) ) { add_component($connection, $argv[2], $argv[3], $argv[4], $_SERVER['USER']); 
+      } else { add_component($connection, $argv[2], $argv[3], $argv[4], $argv[5]); }
+    }
+    if ( $argv[1] == 'cs' ) { change_state($connection, $argv[2], $argv[3]); }
+    if ( $argv[1] == 'ss' ) { show_states(); }
+    if ( $argv[1] == 'ks' ) { list_of_comments($connection, $argv[2]); }
+    if ( $argv[1] == 'ka' ) { add_comment($connection, $argv[2], $argv[3]); }
+    if ( $argv[1] == 'dc' ) { del_component($connection, $argv[2], $argv[3]); }
+    if ( $argv[1] == 'dp' ) { del_product($connection, $argv[2]); }
+    if ( $argv[1] == 'cp' ) { change_password($connection, $argv[2], $argv[3]); }
+  } else {
+    if ( isset($_SERVER["SHELL"]) ) {
+      echo "btcli - BugTrack CLI for request management\n";
+      echo "morketsmerke.org @ 2023\n";
+      echo "This script requires running instance of BugTrack\n";
+      echo "Options:\n";
+      echo "\tlb-all - prints all submitted requests\n\n";
+      echo "\tlb-user - prints submitted request except done or rejected tasks\n\n";
+      echo "\tlp - prints all products defined on the platform\n\n";
+      echo "\tlc <product_name> - prints all components related with given product\n\n";
+      echo "\tsb <product_name> <component_name> <type_of> <subject> <description> - submiting bug or \n\tenchancement request\n\n";
+      echo "\tap <product_name> <product_description> [product_author] - adding new product to the \n\tplatform\n\n";
+      echo "\tac <product_name> <component_name> <component_description> [component_author] - adding new \n\tcomponent related with given product (product must exist before you create a component)\n\n";
+      echo "\tcs <bug_id> <new_state> - change request state (bug_id is the second column in \n\tlb-all/lb-user output)\n\n";
+      echo "\tss - numeric state values reference (shows, which number is which state)\n\n";
+      echo "\tks <bug_id> - prints all comments for given request\n\n";
+      echo "\tks <bug_id> <comment> - writes a comment for given request\n\n";
+      echo "\tdc <product_name> <component_name> - removes given component\n\n";
+      echo "\tdp <product_name> - removes give product with all related components\n\n";
+      echo "\tcp <username> <new_password> - setting new password for given user\n\n";
+      echo "Request removing:\n";
+      echo "To remove some request just set them state 5, which means 'To delete'\n";
+      echo "Setting state 5, causing request deletion\n";
+    } else {
+      include($ROOT . '/403.php');
+    }
+  }
+  #var_dump($_SERVER);
+?>

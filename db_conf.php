@@ -12,7 +12,9 @@
           console.log(\"Błąd: " . mysqli_connect_error() . "\");</script>";
     exit;
   } else {
-    echo "<script>console.log('Połączenie powiodło się!');</script>";
+    if ( ! isset($_SERVER["SHELL"]) ) {
+      echo "<script>console.log('Połączenie powiodło się!');</script>";
+    }
   }
 
 ?>

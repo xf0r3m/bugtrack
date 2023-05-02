@@ -2,7 +2,9 @@
 
 function mysqliResult($connection, $result) {
   if ( (mysqli_num_rows($result) > 0) || ($result == true) ) {
-    echo "<script>console.log('Zapytanie powiodło się.')</script>";
+    if ( ! isset($_SERVER["SHELL"]) ) {
+      echo "<script>console.log('Zapytanie powiodło się.')</script>";
+    }
     return true;
   } else {
     echo "<script>console.log('Zapytanie nie powiodło się: " . mysqli_error($connection) . "');</script>";
