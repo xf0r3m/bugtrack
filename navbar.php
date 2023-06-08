@@ -7,7 +7,7 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link frontpage-link" href="?p=siteListProducts">Zgłoś błąd</a>
+            <a class="nav-link frontpage-link" href="?p=siteListProducts&site=submit">Zgłoś błąd</a>
           </li>
 		      <li class="nav-item">
             <a class="nav-link frontpage-link" href="?p=bugs">Zgłoszone błędy</a>
@@ -15,6 +15,7 @@
             <?php
               session_start();
               if ( isset($_SESSION["username"]) ) {
+                echo "<li class=\"nav-item\"><a class=\"nav-link frontpage-link\" href=\"?p=siteListProducts&site=changelog\">Lista zmian</a></li>";
                 echo "<li class=\"nav-item\"><a class=\"nav-link frontpage-link\" href=\"?p=settings\">Ustawienia</a></li>";
                 echo "<li class=\"nav-item\"><span class=\"nav-link navbar-greetings\">Witaj, " . $_SESSION["username"] . "! (<a class=\"frontpage-link\" href=\"?p=logout\">Wyloguj się</a>)</span></li>";
               } else {

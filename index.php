@@ -48,6 +48,10 @@
               include('bugs.php');
             } else if ($_GET["p"] == "comments") {
               include('comments.php');
+            } else if ($_GET["p"] == "changelog") {
+              include('changelog.php');
+            } else if ($_GET["p"] == "viewchlog") {
+              include('viewchlog.php');
             } else {
               include('404.php');
             }

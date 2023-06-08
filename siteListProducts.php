@@ -1,9 +1,11 @@
-<div class="card card-spacer">
+<!-- <div class="card card-spacer">
   <div class="card-header">
     <h4>Lista produktów:</h4>
   </div>
-  <div class="card-body">
-  <?php
+  <div class="card-body"> -->
+ <?php
+    siteListProducts($connection, $_GET["site"]);
+    /*
     $tableName = "product";
     $columnScheme = "*";
     $whereValue = "1=1";
@@ -18,6 +20,8 @@
     } else {
       echo "<div class=\"alert alert-primary\" role=\"alert\">Nie znaleziono żadnych produktów</div>";
     }
+    */
   ?>
+<!--
   </div>
-</div>
+</div>-->

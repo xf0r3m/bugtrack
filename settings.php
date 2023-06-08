@@ -16,6 +16,10 @@
       if ( isset($_POST["editCompId"]) ) { include('modules/editcomponent.php'); }
       if ( isset($_POST["delCid"]) ) { include('modules/delcomponent.php'); }
       if ( isset($_POST["siteSlogan"]) ) { include('modules/saveslogan.php'); }
+      if ( isset($_POST["CLFormCode"]) ) { include('modules/newclform.php'); }
+      if ( isset($_POST["editCLFormCode"]) ) { include('modules/editclform.php'); }
+      if ( isset($_POST["dictionary"]) ) { include('modules/newdictionary.php'); }
+      if ( isset($_POST["editDictionary"]) ) { include('modules/editdictionary.php'); }
 
     }
     $whereValue="username = '" . $_SESSION["username"] . "';";
@@ -38,6 +42,9 @@
       if ( isset($_POST) && isset($_POST["editCid"]) ) { include('modules/editcomponent.php'); }
       else { include('forms/newcomponent.php'); }
       include('modules/listcomponents.php');
+      echo "</div></div>";
+      echo "<div class=\"card card-spacer\"><div class=\"card-header\"><h4>Formularz listy zmian:</h4></div><div class=\"card-body\">";
+      include('modules/listclforms.php');
       echo "</div></div>";
       echo "<div class=\"card card-spacer\"><div class=\"card-header\"><h4>Strona główna:</h4></div><div class=\"card-body\">";
       include('forms/slogan.php');

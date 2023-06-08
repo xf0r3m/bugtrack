@@ -12,8 +12,9 @@ function mysqliResult($connection, $result) {
   }
 }
 
-function dbQuery($connection, $tableName, $columnScheme, $whereValue) {
+function dbQuery($connection, $tableName, $columnScheme, $whereValue, $debug=0) {
   $query = "SELECT " . $columnScheme . " FROM " . $tableName . " WHERE " . $whereValue;
+  if ( $debug == 1 ) { var_dump($query); }
   $result = mysqli_query($connection, $query);
  
   if ( mysqliResult($connection, $result) ) {
@@ -62,4 +63,45 @@ function dbDel($connection, $tableName, $whereValue) {
     echo "<script>console.log('Usunięcie danych z bazy jest niemożliwa');</script>";
   }
 }
-  
+
+function siteListProducts($connection, $page) {  
+  echo "<div class=\"card card-spacer\">
+  <div class=\"card-header\">
+    <h4>Lista produktów:</h4>
+  </div>
+  <div class=\"card-body\">";
+  $tableName = "product";
+  $columnScheme = "*";
+  $whereValue = "1=1";
+  $result = dbQuery($connection, $tableName, $columnScheme, $whereValue);
+  if ( mysqli_num_rows($result) > 0 ) {
+    echo "<ul class=\"list-group\">";
+    while ( $row = mysqli_fetch_row($result) ) {
+      echo "<li class=\"list-group-item\"><a href=\"?p=" . $page . "&pid=" . $row[0] ."\">";
+      echo $row[1] . "</a> (<em>". $row[2] ."</em>, <span class=\"text-muted\">" . $row[3] . "</span>)</li>";
+    }
+    echo "</ul>";
+  } else {
+    echo "<div class=\"alert alert-primary\" role=\"alert\">Nie znaleziono żadnych produktów</div>";
+  }
+  echo "</div></div>";
+}
+
+function newFormatTo80Cols($long_string, $linePrefix, $eolSign) {
+  $content = array();
+  if ( strlen($long_string) > 80 ) { 
+    $toExplode = wordwrap($long_string, 80, "|", false);
+    $exploded = explode("|", $toExplode);
+    $i=0;
+    foreach ( $exploded as $line ) {
+      $content[$i] = $linePrefix . $line . $eolSign;
+      $i += 1;
+    }
+  } else {
+    $content[0] = $linePrefix . $long_string . $eolSign;
+  }
+  return $content;
+}
+
+?>
+          
