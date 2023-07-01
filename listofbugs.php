@@ -32,7 +32,7 @@
       #echo getFieldValue($result3);
       $row3 = mysqli_fetch_row($result3);
       echo $row3[0];
-      echo "</th><td>" . $row[3] . "</td><td>" . $row[4] . "</td><td>" . nl2br($row[5]) . "</td>";
+      echo "</th><td>" . $row[3] . "</td><td>" . $row[4] . "</td><td class=\"request-desc\">" . nl2br($row[5]) . "</td>";
       echo "<td>";
       include('forms/chbugstate.php');
       echo "</td></tr>";

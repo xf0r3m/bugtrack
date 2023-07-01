@@ -24,6 +24,7 @@
 		.login-form-card { width: 35%; }
     .navbar-greetings { color: rgba(0,0,0,.9) !important; pointer-events: none; }
     .card-spacer { margin-top: 0.5%; }
+    .request-desc { word-wrap: normal; width: 25%; }
 	</style>
         <title>BugTrack - <?php echo $row[0]; ?></title>
   </head>
