@@ -1,7 +1,7 @@
 <?php
 
 function mysqliResult($connection, $result) {
-  if ( (mysqli_num_rows($result) > 0) || ($result == true) ) {
+  if ( ($result === true) || (mysqli_num_rows($result) > 0) ) {
     if ( ! isset($_SERVER["SHELL"]) ) {
       echo "<script>console.log('Zapytanie powiodło się.')</script>";
     }
