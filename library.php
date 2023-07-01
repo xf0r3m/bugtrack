@@ -128,7 +128,7 @@ function presentListBugs($connection, $cond) {
       $whereValue = 'id = ' . intval($row[2]);
       $result3 = dbQuery($connection, $tableName, $columnScheme, $whereValue);
       echo getFieldValue($result3);
-      echo "</th><td>" . $row[3] . "</td><td>" . $row[4] . "</td><td>" . $row[5] . "</td>";
+      echo "</th><td>" . $row[3] . "</td><td>" . $row[4] . "</td><td>" . nl2br($row[5]) . "</td>";
       echo "<td>";
       $stateTbl = array("Przyjęty", "Potwierdzony", "W trakcie", "Zakończony", "Odrzucony");
       $index = $row[6];

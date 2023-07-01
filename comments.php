@@ -14,7 +14,7 @@
       echo "<div class=\"card card-spacer\">";
       echo "<div class=\"card-header\">";
       echo "<strong>" . $row[0] . "</strong>, <em class=\"text-muted\">" . $row[1] . "</em> pisze...";
-      echo "</div><div class=\"card-body\">" . $row[2] . "</div></div>";
+      echo "</div><div class=\"card-body\">" . nl2br($row[2]) . "</div></div>";
     }
   }
   if ( session_status() != 2 ) { session_start(); }
