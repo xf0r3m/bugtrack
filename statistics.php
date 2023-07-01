@@ -45,7 +45,7 @@
         <?php
           $tableName = "bug";
           $columnScheme = "COUNT(id)";
-          $whereValue = "state = 3";
+          $whereValue = "state >= 3";
           $closedBugsResult = dbQuery($connection, $tableName, $columnScheme, $whereValue);
           echo "Zgłoszeń zamkniętych: <strong>" . getFieldValue($closedBugsResult) . "</strong>";
         ?>
