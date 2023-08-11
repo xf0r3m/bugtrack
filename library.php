@@ -108,7 +108,7 @@ function presentListBugs($connection, $cond) {
   $columnScheme = "*";
   $whereValue = $cond;
   $result = dbQuery($connection, $tableName, $columnScheme, $whereValue);
-  if ( mysqli_num_rows($result) > 0 ) {
+  if ( isset($result) && mysqli_num_rows($result) > 0 ) {
     echo "<table class=\"table\">";
     echo "<thead><tr><th scope=\"col\">#Lp.</th><th scope=\"col\">#id</th><th scope=\"col\">Produkt</th><th scope=\"col\">Komponent</th>";
     echo "<th scope=\"col\">Rodzaj zgłosz.</th><th scope=\"col\">Temat zgłosz.</th><th scope=\"col\">Opis zgłosz.</th>";
@@ -130,7 +130,7 @@ function presentListBugs($connection, $cond) {
       echo getFieldValue($result3);
       echo "</th><td>" . $row[3] . "</td><td>" . $row[4] . "</td><td>" . nl2br($row[5]) . "</td>";
       echo "<td>";
-      $stateTbl = array("Przyjęty", "Potwierdzony", "W trakcie", "Zakończony", "Odrzucony");
+      $stateTbl = array("Przyjęty", "Potwierdzony", "W trakcie", "Zakończony", "Odrzucony", "Zachowany");
       $index = $row[6];
       echo $stateTbl[$index]; 
       echo "</td>";

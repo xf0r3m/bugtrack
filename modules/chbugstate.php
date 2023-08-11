@@ -3,7 +3,7 @@
   $columnScheme = "state";
   $whereValue = "id = " . intval($_POST["bugId"]);
   $newStateId = intval($_POST["chBugState"]);
-  if ( $newStateId == 5 ) {
+  if ( $newStateId == 6 ) {
     $tableName = 'comment';
     $whereValue = "bugId = " . intval($_POST["bugId"]);
     $result = dbDel($connection, $tableName, $whereValue);
@@ -35,7 +35,7 @@
       echo "<div class=\"alert alert-danger\" role=\"alert\">Status zgłoszenia nie został zmieniony</div>";
     }
 
-    $stateTbl = array("Przyjęty", "Potwierdzony", "W trakcie", "Zakończony", "Odrzucony");
+    $stateTbl = array("Przyjęty", "Potwierdzony", "W trakcie", "Zakończony", "Odrzucony", "Zachowany");
 
     $newState = $stateTbl[$newStateId];
     $oldState = $stateTbl[$oldStateId]; 

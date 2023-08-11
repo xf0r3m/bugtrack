@@ -20,6 +20,7 @@
       if ( isset($_POST["editCLFormCode"]) ) { include('modules/editclform.php'); }
       if ( isset($_POST["dictionary"]) ) { include('modules/newdictionary.php'); }
       if ( isset($_POST["editDictionary"]) ) { include('modules/editdictionary.php'); }
+      if ( isset($_POST["siteTheme"]) ) { include('modules/savetheme.php'); }
 
     }
     $whereValue="username = '" . $_SESSION["username"] . "';";
@@ -46,8 +47,9 @@
       echo "<div class=\"card card-spacer\"><div class=\"card-header\"><h4>Formularz listy zmian:</h4></div><div class=\"card-body\">";
       include('modules/listclforms.php');
       echo "</div></div>";
-      echo "<div class=\"card card-spacer\"><div class=\"card-header\"><h4>Strona główna:</h4></div><div class=\"card-body\">";
+      echo "<div class=\"card card-spacer\"><div class=\"card-header\"><h4>Wygląd serwisu:</h4></div><div class=\"card-body\">";
       include('forms/slogan.php');
+      include('forms/theme.php');
       echo "</div></div>";
 
     } 

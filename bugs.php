@@ -16,7 +16,7 @@
   </div>
   <div class="card-body">
 <?php
-  $cond = "state >= 3 ORDER BY id DESC";
+  $cond = "state >= 3 AND state < 5 ORDER BY id DESC";
   presentListBugs($connection, $cond);
 ?>
   </div>
