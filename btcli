@@ -13,6 +13,8 @@
         $whereValue = "1=1";
       } else if ( $type_of == "user" ) {
         $whereValue = "state < 3";
+      } else if ( $type_of == "saved" ) {
+        $whereValue = "state = 5";
       }
     } 
     $result = dbQuery($connection, $tableName, $columnScheme, $whereValue);
@@ -36,7 +38,7 @@
         echo $compName . "\t";
 
         echo $row[3] . "\t" . $row[4] . "\t" . $row[5] . "\t";
-        $stateTbl = array("Przyjęty", "Potwierdzony", "W trakcie", "Zakończony", "Odrzucony");
+        $stateTbl = array("Przyjęty", "Potwierdzony", "W trakcie", "Zakończony", "Odrzucony", "Zachowany");
         $index = $row[6];
         $state=$stateTbl[$index];
 
@@ -155,7 +157,7 @@
 
   function show_states($state="all") {
     if ( isset($state) ) {
-      $stateTbl = array('Przyjęty', 'Potwierdzony', 'W trakcie', 'Zakończony', 'Odrzucony', 'Do usunięcia');
+      $stateTbl = array('Przyjęty', 'Potwierdzony', 'W trakcie', 'Zakończony', 'Odrzucony', 'Zachowany', 'Do usunięcia');
       if ( $state == "all" ) {
         for ( $i=0; $i < count($stateTbl); $i++ ) {
           echo $i . "\t" . $stateTbl[$i] . "\n\n";
@@ -168,9 +170,9 @@
 
 
   function change_state($connection, $bugId, $newState) {
-    if ( ( $newState < 0 ) || ( $newState > 5 ) ) {
+    if ( ( $newState < 0 ) || ( $newState > 6 ) ) {
       return false;
-    } else if ( $newState == 5 ) {
+    } else if ( $newState == 6 ) {
       $tableName = 'comment';
       $whereValue = 'bugId = ' . intval($bugId);
       $resultk = dbDel($connection, $tableName, $whereValue);
@@ -295,6 +297,7 @@
   if ( isset($argv[1]) ) {
     if ( $argv[1] == 'lb-all' ) { list_of_bugs($connection); }
     if ( $argv[1] == 'lb-user' ) { list_of_bugs($connection, 'user'); }
+    if ( $argv[1] == 'lb-saved' ) { list_of_bugs($connection, 'saved'); }
     if ( $argv[1] == 'lp' ) { list_of_products($connection); }
     if ( $argv[1] == 'lc' ) { list_of_components($connection, $argv[2]); }
     if ( $argv[1] == 'sb' ) { submit_bug($connection, $argv[2], $argv[3], $argv[4], $argv[5], $argv[6]); }
