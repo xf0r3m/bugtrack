@@ -338,8 +338,8 @@
       echo "\tdp <product_name> - removes give product with all related components\n\n";
       echo "\tcp <username> <new_password> - setting new password for given user\n\n";
       echo "Request removing:\n";
-      echo "To remove some request just set them state 5, which means 'To delete'\n";
-      echo "Setting state 5, causing request deletion\n";
+      echo "To remove some request just set them state 6, which means 'To delete'\n";
+      echo "Setting state 6, causing request deletion\n";
     } else {
       include($ROOT . '/403.php');
     }
