@@ -323,7 +323,8 @@
       echo "This script requires running instance of BugTrack\n";
       echo "Options:\n";
       echo "\tlb-all - prints all submitted requests\n\n";
-      echo "\tlb-user - prints submitted request except done or rejected tasks\n\n";
+      echo "\tlb-user - prints submitted requests except done or rejected tasks\n\n";
+      echo "\tlb-saved - prints only saved requests\n\n";
       echo "\tlp - prints all products defined on the platform\n\n";
       echo "\tlc <product_name> - prints all components related with given product\n\n";
       echo "\tsb <product_name> <component_name> <type_of> <subject> <description> - submiting bug or \n\tenchancement request\n\n";
