@@ -222,9 +222,21 @@
     $whereValue = "bugId = " . intval($bugId);
     $result = dbQuery($connection,$tableName,$columnScheme,$whereValue);
     if ( mysqli_num_rows($result) > 0 ) {
+      $count=1;
+      echo "==============================================================" . "\n\n";
       while( $row = mysqli_fetch_row($result) ) {
         echo $row[0] . ", " . $row[1] . " pisze...\n";
-        echo $row[2] . "\n\n";
+        $msg = $row[2];
+        $msg = str_replace("<br />", "\n", $msg);
+        $msg = str_replace("<strong>","\e[1;37m", $msg);
+        $msg = str_replace("</strong>","\e[0m", $msg);
+        echo $msg . "\n\n";
+        if ( $count == 1 ) {
+          echo "==============================================================" . "\n\n";
+        } else {
+          echo "--------------------------------------------------------------" . "\n\n";
+        }
+        $count++;
       }
     }
   }
