@@ -5,7 +5,17 @@
     $setValues = intval($_POST["submitProductId"]) . "," . intval($_POST["submitCompId"]) . ",'" . mysqli_real_escape_string($connection, htmlspecialchars($_POST["submitTypeOf"])) . "','" . mysqli_real_escape_string($connection, htmlspecialchars($_POST["submitSubject"])) . "','" . mysqli_real_escape_string($connection, htmlspecialchars($_POST["submitDesc"])) . "',0";
     $result = dbAdd($connection, $tableName, $columnScheme, $setValues);
     if ( $result == true ) {
-      echo "<div class=\"alert alert-success\" role=\"alert\">Zgłoszenie zostało przyjęte. Niebawem pojawi się na stronie zgłoszonych problemów</div>";
+      $tableName = 'bug';
+      $columnScheme = 'id';
+      $whereValue = '1=1 ORDER BY id DESC LIMIT 1';
+      $result = dbQuery($connection, $tableName, $columnScheme, $whereValue);
+      if ( mysqli_num_rows($result) > 0 ) {
+        $bugID = getFieldValue($result);
+      }
+      echo "<div class=\"alert alert-success\" role=\"alert\">Zgłoszenie zostało przyjęte.<br />";
+      echo "Link do śledzenia zmian: <a href=\"index.php?p=comments&bid=" . $bugID . "\">" . $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['SERVER_NAME'] . "/index.php?p=comments&bid=" . $bugID . "</a><br />";
+      echo "Link należy zachować, aby móc śledzić zmiany w zgłoszeniach. Niektóre zgłoszenia nie są wyświetlane na stronie.";
+      echo "</div>";
     } else {
       echo "<div class=\"alert alert-danger\" role=\"alert\">Zgłosznie nie zostało przyjęte.</div>";
     }
